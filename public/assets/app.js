@@ -21,8 +21,6 @@
                 subtitle: 'Veuillez remplir vos informations avant de commencer le quiz de sécurité.',
                 name: 'Nom complet',
                 namePlaceholder: 'Ex : Jean Dupont',
-                position: 'Poste / Fonction',
-                positionPlaceholder: 'Ex : Technicien',
                 org: 'Organisation',
                 orgPlaceholder: 'Ex : ManaEnergy',
                 start: 'Commencer le quiz',
@@ -33,8 +31,7 @@
                 rule1: "10 questions basées sur l'induction sécurité mLNG Tendrara",
                 rule2: 'Seuil de réussite : 7 bonnes réponses sur 10',
                 rule3: '30 secondes par question : passé ce délai, la question est comptée fausse',
-                rule4: 'Durée totale maximale : 5 minutes',
-                privacy: 'Vos nom, fonction, organisation et résultats sont transmis à ManaEnergy uniquement pour le suivi HSE des inductions (loi 09-08).'
+                rule4: 'Durée totale maximale : 5 minutes'
             },
             quiz: {
                 progress: 'Question {current}/{total}',
@@ -42,12 +39,12 @@
                 questionTime: 'Temps restant pour cette question :',
                 next: 'Question suivante',
                 seeResults: 'Voir le résultat',
-                timeoutNotice: '⏱ Temps écoulé pour la question {n} : elle est comptée fausse.'
+                timeoutNotice: 'Temps écoulé pour la question {n} : elle est comptée fausse.'
             },
             feedback: {
-                correct: '✅ Bonne réponse !',
-                incorrect: '❌ Incorrect. La bonne réponse est : {answer}',
-                timeout: '⏱ Temps écoulé : réponse comptée fausse. La bonne réponse est : {answer}'
+                correct: 'Bonne réponse.',
+                incorrect: 'Réponse incorrecte. La bonne réponse est : {answer}',
+                timeout: 'Temps écoulé, réponse comptée fausse. La bonne réponse est : {answer}'
             },
             results: {
                 title: 'Résultat du quiz',
@@ -57,22 +54,21 @@
                 incorrect: 'Incorrectes',
                 timeout: 'Temps écoulé',
                 duration: 'Durée',
-                pass: '✅ Induction sécurité réussie',
-                fail: '❌ Induction à refaire',
-                sent: '✓ Résultat transmis au service HSE.',
-                notSent: "⚠ Le résultat n'a pas pu être transmis. Merci de prévenir l'accueil.",
+                pass: 'Induction sécurité réussie',
+                fail: 'Induction à refaire',
+                sent: 'Résultat transmis au service HSE.',
+                notSent: "Le résultat n'a pas pu être transmis. Merci de prévenir l'accueil.",
                 review: 'Voir la correction',
                 yourAnswer: 'Votre réponse :',
                 correctAnswer: 'Bonne réponse :',
-                noAnswer: '— (aucune réponse)',
-                chipCorrect: 'Correct',
-                chipIncorrect: 'Faux',
-                chipTimeout: 'Temps écoulé',
+                noAnswer: 'Aucune réponse',
+                chipCorrect: 'Correcte',
+                chipIncorrect: 'Incorrecte',
+                chipTimeout: 'Hors délai',
                 restart: 'Nouvelle inscription'
             },
             validation: {
                 name: 'Veuillez entrer votre nom complet.',
-                position: 'Veuillez entrer votre poste / fonction.',
                 org: 'Veuillez entrer votre organisation.'
             },
             errors: {
@@ -94,8 +90,6 @@
                 subtitle: 'Please fill in your details before starting the safety quiz.',
                 name: 'Full name',
                 namePlaceholder: 'E.g. John Doe',
-                position: 'Position / Function',
-                positionPlaceholder: 'E.g. Technician',
                 org: 'Organization',
                 orgPlaceholder: 'E.g. ManaEnergy',
                 start: 'Start the quiz',
@@ -106,8 +100,7 @@
                 rule1: '10 questions based on the mLNG Tendrara safety induction',
                 rule2: 'Passing score: 7 correct answers out of 10',
                 rule3: '30 seconds per question: after that, the question counts as wrong',
-                rule4: 'Maximum total duration: 5 minutes',
-                privacy: 'Your name, position, organization and results are sent to ManaEnergy solely for HSE induction tracking (Law 09-08).'
+                rule4: 'Maximum total duration: 5 minutes'
             },
             quiz: {
                 progress: 'Question {current}/{total}',
@@ -115,12 +108,12 @@
                 questionTime: 'Time remaining for this question:',
                 next: 'Next question',
                 seeResults: 'See my result',
-                timeoutNotice: '⏱ Time is up for question {n}: it counts as wrong.'
+                timeoutNotice: 'Time is up for question {n}: it counts as wrong.'
             },
             feedback: {
-                correct: '✅ Correct!',
-                incorrect: '❌ Incorrect. The correct answer is: {answer}',
-                timeout: '⏱ Time is up: counted as wrong. The correct answer is: {answer}'
+                correct: 'Correct answer.',
+                incorrect: 'Incorrect answer. The correct answer is: {answer}',
+                timeout: 'Time is up, counted as wrong. The correct answer is: {answer}'
             },
             results: {
                 title: 'Quiz result',
@@ -130,14 +123,14 @@
                 incorrect: 'Incorrect',
                 timeout: 'Timed out',
                 duration: 'Duration',
-                pass: '✅ Safety induction passed',
-                fail: '❌ Induction must be repeated',
-                sent: '✓ Result sent to the HSE department.',
-                notSent: '⚠ The result could not be sent. Please inform the reception desk.',
+                pass: 'Safety induction passed',
+                fail: 'Induction must be repeated',
+                sent: 'Result sent to the HSE department.',
+                notSent: 'The result could not be sent. Please inform the reception desk.',
                 review: 'See the correction',
                 yourAnswer: 'Your answer:',
                 correctAnswer: 'Correct answer:',
-                noAnswer: '— (no answer)',
+                noAnswer: 'No answer',
                 chipCorrect: 'Correct',
                 chipIncorrect: 'Wrong',
                 chipTimeout: 'Timed out',
@@ -145,7 +138,6 @@
             },
             validation: {
                 name: 'Please enter your full name.',
-                position: 'Please enter your position / function.',
                 org: 'Please enter your organization.'
             },
             errors: {
@@ -216,8 +208,8 @@
         errorAction: $('errorAction'),
         regForm: $('regForm'),
         startBtn: $('startQuizBtn'),
-        inputs: { name: $('visitorName'), position: $('visitorPosition'), org: $('visitorOrg') },
-        fieldErrors: { name: $('err-name'), position: $('err-position'), org: $('err-org') },
+        inputs: { name: $('visitorName'), org: $('visitorOrg') },
+        fieldErrors: { name: $('err-name'), org: $('err-org') },
         progressText: $('quizProgressText'),
         progressBar: $('progressBar'),
         totalTimer: $('totalTimer'),

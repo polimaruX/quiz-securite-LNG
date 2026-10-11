@@ -153,7 +153,6 @@ async function loadSession(store, sid) {
 async function actionStart(store, body, now) {
   const visitor = {
     name: cleanText(body.name),
-    position: cleanText(body.position),
     org: cleanText(body.org)
   };
   const missing = Object.entries(visitor).filter(([, v]) => !v).map(([k]) => k);
@@ -290,7 +289,6 @@ async function submitReport(s, review, deps, origin) {
       'form-name': 'quiz-report',
       'bot-field': '',
       fullname: s.visitor.name,
-      function: s.visitor.position,
       organization: s.visitor.org,
       score: `${r.score}/${r.total}`,
       percentage: `${r.percentage}%`,

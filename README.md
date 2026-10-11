@@ -58,4 +58,4 @@ Netlify Blobs ne demande aucune configuration. Aucune variable d'environnement n
 
 ## Données personnelles
 
-Le nom, la fonction, l'organisation et les résultats sont conservés dans Netlify Forms et dans le store Netlify Blobs `quiz-sessions`. On peut les supprimer depuis le tableau de bord Netlify.
+Le nom, l'organisation et les résultats sont conservés dans Netlify Forms et dans le store Netlify Blobs `quiz-sessions`. On peut les supprimer depuis le tableau de bord Netlify.

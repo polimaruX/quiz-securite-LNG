@@ -4,9 +4,8 @@
 
 const LABELS = {
   fr: {
-    title: "Rapport d'induction sécurité — mLNG Tendrara",
+    title: "Rapport d'induction sécurité mLNG Tendrara",
     name: 'Nom complet',
-    position: 'Fonction',
     org: 'Organisation',
     result: 'Résultat',
     score: 'Score final',
@@ -19,19 +18,18 @@ const LABELS = {
     colChosen: 'Réponse donnée',
     colCorrect: 'Bonne réponse',
     colStatus: 'Résultat',
-    correct: 'VRAI',
-    incorrect: 'FAUX',
-    timeout: 'TEMPS ÉCOULÉ',
-    noAnswer: '— (aucune réponse)',
+    correct: 'Correcte',
+    incorrect: 'Incorrecte',
+    timeout: 'Hors délai',
+    noAnswer: 'Aucune réponse',
     passRule: (m, t) => `Seuil de réussite : ${m}/${t}`,
     footer: "Rapport d'induction sécurité généré automatiquement",
     confidential: 'Document confidentiel',
     attempt: 'Réf.'
   },
   en: {
-    title: 'Safety induction report — mLNG Tendrara',
+    title: 'Safety induction report mLNG Tendrara',
     name: 'Full name',
-    position: 'Position',
     org: 'Organization',
     result: 'Result',
     score: 'Final score',
@@ -44,10 +42,10 @@ const LABELS = {
     colChosen: 'Answer given',
     colCorrect: 'Correct answer',
     colStatus: 'Result',
-    correct: 'TRUE',
-    incorrect: 'FALSE',
-    timeout: 'TIMED OUT',
-    noAnswer: '— (no answer)',
+    correct: 'Correct',
+    incorrect: 'Incorrect',
+    timeout: 'Timed out',
+    noAnswer: 'No answer',
     passRule: (m, t) => `Pass mark: ${m}/${t}`,
     footer: 'Automatically generated safety induction report',
     confidential: 'Confidential document',
@@ -88,7 +86,7 @@ export function buildReport({ visitor, result, review, lang, logos, date, durati
 <td class="c">Q${item.n}</td>
 <td>${e(v.question)}</td>
 <td>${v.chosen === null ? e(L.noAnswer) : e(v.chosen)}</td>
-<td class="good">${item.status === 'correct' ? '—' : e(v.correct)}</td>
+<td class="good">${item.status === 'correct' ? '' : e(v.correct)}</td>
 <td class="c">${badge}</td>
 </tr>`;
     })
@@ -139,7 +137,6 @@ tr.miss{background:#fffbeb}
 <div class="card">
 <div class="info">
 <div><i>${e(L.name)}</i><strong>${e(visitor.name)}</strong></div>
-<div><i>${e(L.position)}</i><strong>${e(visitor.position)}</strong></div>
 <div><i>${e(L.org)}</i><strong>${e(visitor.org)}</strong></div>
 <div><i>${e(L.result)}</i><strong class="${result.passed ? 'pass' : 'fail'}">${e(result.passed ? L.passed : L.failed)}</strong></div>
 <div><i>${e(L.score)}</i><strong>${result.score}/${result.total} (${result.percentage}%)</strong><br><small>${e(L.passRule(result.passMark, result.total))}</small></div>
@@ -151,7 +148,7 @@ tr.miss{background:#fffbeb}
 <tbody>${rows}</tbody>
 </table>
 </div>
-<div class="ft"><strong>ManaEnergy</strong> — ${e(L.footer)}<br>${e(L.confidential)} • ${e(date)} • ${e(L.attempt)} ${e(sid)}</div>
+<div class="ft"><strong>ManaEnergy</strong>. ${e(L.footer)}<br>${e(L.confidential)}, ${e(date)}, ${e(L.attempt)} ${e(sid)}</div>
 </div>
 </body>
 </html>`;

@@ -72,10 +72,10 @@
                         <strong data-i18n="registration.welcomeGoodQuiz"></strong>
                     </p>
                     <ul class="rules">
-                        <li><span class="rule-dot" aria-hidden="true">1</span><span data-i18n="registration.rule1"></span></li>
-                        <li><span class="rule-dot" aria-hidden="true">2</span><span data-i18n="registration.rule2"></span></li>
-                        <li><span class="rule-dot" aria-hidden="true">3</span><span data-i18n="registration.rule3"></span></li>
-                        <li><span class="rule-dot" aria-hidden="true">4</span><span data-i18n="registration.rule4"></span></li>
+                        <li><span data-i18n="registration.rule1"></span></li>
+                        <li><span data-i18n="registration.rule2"></span></li>
+                        <li><span data-i18n="registration.rule3"></span></li>
+                        <li><span data-i18n="registration.rule4"></span></li>
                     </ul>
                 </div>
 
@@ -87,22 +87,12 @@
                         <p class="field-error" id="err-name" hidden></p>
                     </div>
                     <div class="form-group">
-                        <label for="visitorPosition" data-i18n="registration.position">Poste / Fonction</label>
-                        <input type="text" id="visitorPosition" name="position" maxlength="100" required
-                            aria-describedby="err-position" data-i18n-placeholder="registration.positionPlaceholder">
-                        <p class="field-error" id="err-position" hidden></p>
-                    </div>
-                    <div class="form-group">
                         <label for="visitorOrg" data-i18n="registration.org">Organisation</label>
                         <input type="text" id="visitorOrg" name="org" maxlength="100" required
                             aria-describedby="err-org" data-i18n-placeholder="registration.orgPlaceholder">
                         <p class="field-error" id="err-org" hidden></p>
                     </div>
-                    <p class="privacy" data-i18n="registration.privacy"></p>
                     <button type="submit" class="btn btn-primary btn-block" id="startQuizBtn">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M7 4l13 8-13 8z" class="fill" />
-                        </svg>
                         <span data-i18n="registration.start">Commencer le quiz</span>
                     </button>
                 </form>
@@ -113,10 +103,6 @@
                 <div class="quiz-top">
                     <span class="pill" id="quizProgressText"></span>
                     <span class="pill pill-timer" id="totalTimer" role="timer" aria-live="off">
-                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <circle cx="12" cy="13" r="8" />
-                            <path d="M12 9v4l2.5 2.5M9 2h6" />
-                        </svg>
                         <span class="sr-only" data-i18n="quiz.totalTime"></span>
                         <span id="totalTimerValue">5:00</span>
                     </span>
@@ -148,18 +134,11 @@
 
                 <button type="button" class="btn btn-primary btn-block" id="nextBtn" hidden>
                     <span id="nextBtnLabel"></span>
-                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M5 12h14M13 6l6 6-6 6" />
-                    </svg>
                 </button>
             </section>
 
             <!-- ========== RESULTS ========== -->
             <section id="view-results" class="results" hidden aria-labelledby="resultsTitle">
-                <svg class="results-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5z" />
-                    <path d="M8.5 12l2.5 2.5 4.5-5" />
-                </svg>
                 <h1 id="resultsTitle" class="title" data-i18n="results.title">Résultat du quiz</h1>
                 <div id="resultBadge" class="result-badge"></div>
 
@@ -180,9 +159,6 @@
                 </details>
 
                 <button type="button" class="btn btn-primary btn-block" id="restartBtn">
-                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" />
-                    </svg>
                     <span data-i18n="results.restart">Nouvelle inscription</span>
                 </button>
             </section>
@@ -194,7 +170,6 @@
     <form name="quiz-report" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" hidden>
         <input name="bot-field">
         <input name="fullname">
-        <input name="function">
         <input name="organization">
         <input name="score">
         <input name="percentage">
