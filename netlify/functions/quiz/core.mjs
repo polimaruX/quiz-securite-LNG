@@ -312,7 +312,7 @@ async function submitReport(s, review, deps, origin) {
     const date = formatDate(r.finishedAt, s.lang);
     const duration = formatDuration(r.durationMs);
     const logos = await deps.loadLogos(origin);
-    const html = buildReport({ visitor: s.visitor, result: r, review, lang: s.lang, logos, date, duration, sid: s.sid });
+    const html = buildReport({ visitor: s.visitor, result: r, review, lang: s.lang, logos, date, duration });
 
     const fields = {
       'form-name': 'quiz-report',
@@ -324,8 +324,7 @@ async function submitReport(s, review, deps, origin) {
       resultat: r.passed ? 'SUCCESS' : 'FAILED',
       date,
       duration,
-      langue: s.lang.toUpperCase(),
-      attempt_id: s.sid
+      langue: s.lang.toUpperCase()
     };
     const safeFields = Object.entries(fields).map(([k, v]) => [k, csvSafe(String(v))]);
     const url = `${origin}/`;

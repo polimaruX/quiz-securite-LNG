@@ -22,10 +22,7 @@ const LABELS = {
     incorrect: 'Incorrecte',
     timeout: 'Hors délai',
     noAnswer: 'Aucune réponse',
-    passRule: (m, t) => `Seuil de réussite : ${m}/${t}`,
-    footer: "Rapport d'induction sécurité généré automatiquement",
-    confidential: 'Document confidentiel',
-    attempt: 'Réf.'
+    passRule: (m, t) => `Seuil de réussite : ${m}/${t}`
   },
   en: {
     title: 'Safety induction report mLNG Tendrara',
@@ -46,10 +43,7 @@ const LABELS = {
     incorrect: 'Incorrect',
     timeout: 'Timed out',
     noAnswer: 'No answer',
-    passRule: (m, t) => `Pass mark: ${m}/${t}`,
-    footer: 'Automatically generated safety induction report',
-    confidential: 'Confidential document',
-    attempt: 'Ref.'
+    passRule: (m, t) => `Pass mark: ${m}/${t}`
   }
 };
 
@@ -67,7 +61,7 @@ function safeLogo(dataUri) {
   return typeof dataUri === 'string' && /^data:image\/png;base64,[A-Za-z0-9+/=]+$/.test(dataUri) ? dataUri : '';
 }
 
-export function buildReport({ visitor, result, review, lang, logos, date, duration, sid }) {
+export function buildReport({ visitor, result, review, lang, logos, date, duration }) {
   const L = LABELS[lang] || LABELS.fr;
   const e = escapeHtml;
   const mana = safeLogo(logos?.mana);
@@ -124,7 +118,6 @@ tr.miss{background:#fffbeb}
 .c{text-align:center}.good{color:#047857;font-weight:600}
 .b{display:inline-block;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
 .ok{background:#d1fae5;color:#047857}.ko{background:#fee2e2;color:#b91c1c}.to{background:#fef3c7;color:#92400e}
-.ft{margin-top:16px;padding:14px 0;border-top:1px solid #e5e9f0;text-align:center;font-size:11px;color:#64748b}
 @media(max-width:700px){.meta{text-align:left}.info div{min-width:100%}}
 </style>
 </head>
@@ -148,7 +141,6 @@ tr.miss{background:#fffbeb}
 <tbody>${rows}</tbody>
 </table>
 </div>
-<div class="ft"><strong>ManaEnergy</strong>. ${e(L.footer)}<br>${e(L.confidential)}, ${e(date)}, ${e(L.attempt)} ${e(sid)}</div>
 </div>
 </body>
 </html>`;
