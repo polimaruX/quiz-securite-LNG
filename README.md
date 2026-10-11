@@ -52,6 +52,32 @@ Déroulement : `start` → (`answer` → `next`) × 10 → `finish`. Le serveur 
 
 Netlify Blobs ne demande aucune configuration. Aucune variable d'environnement n'est nécessaire.
 
+## E-mail professionnel au service HSE (recommandé)
+
+L'e-mail automatique de Netlify Forms a un format fixe : une liste brute de champs, qu'on ne peut pas mettre en forme. Le quiz peut envoyer à la place son propre e-mail mis en page. Il contient les logos, un bandeau « Induction réussie » ou « à refaire », les informations du visiteur, le score, le détail des réponses et le rapport en pièce jointe.
+
+Dans Netlify, ouvrez **Site configuration → Environment variables** et ajoutez :
+
+| Variable | Exemple | Obligatoire |
+|---|---|---|
+| `SMTP_HOST` | `smtp.gmail.com` / `smtp.office365.com` | oui |
+| `SMTP_PORT` | `587` (ou `465`) | non, 587 par défaut |
+| `SMTP_USER` | `induction@votre-domaine.com` | oui |
+| `SMTP_PASS` | mot de passe d'application | oui (cocher « Secret ») |
+| `MAIL_TO` | `hse@managem.com, accueil@managem.com` | oui, plusieurs adresses séparées par des virgules |
+| `MAIL_FROM` | `Induction Sécurité <induction@votre-domaine.com>` | non, `SMTP_USER` par défaut |
+
+Ensuite :
+1. **Deploys → Trigger deploy**.
+2. Désactivez l'e-mail de Netlify (**Forms → Form notifications**) pour ne pas recevoir deux messages.
+
+Netlify Forms continue d'archiver chaque résultat.
+
+- **Gmail** : activez la validation en deux étapes, puis créez un *mot de passe d'application* (Compte Google → Sécurité → Mots de passe des applications). C'est lui qu'il faut mettre dans `SMTP_PASS`, pas le mot de passe du compte.
+- **Microsoft 365** : l'envoi SMTP authentifié doit être autorisé pour la boîte d'envoi. Voyez avec le service informatique.
+
+Si l'e-mail échoue, l'écran de résultat affiche `Code : mail_error` et le bouton « Réessayer l'envoi ». La cause exacte est dans **Logs → Functions → quiz**.
+
 ## Dépannage : « Le résultat n'a pas pu être transmis »
 
 Le résultat du quiz est toujours enregistré côté serveur. Seul l'envoi vers Netlify Forms a échoué. Le message affiche un code, et le bouton **Réessayer l'envoi** relance l'envoi sans refaire le quiz.

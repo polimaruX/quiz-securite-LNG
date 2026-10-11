@@ -5,6 +5,7 @@
 import { randomInt, randomUUID } from 'node:crypto';
 import { QUESTIONS } from './questions.mjs';
 import { buildReport } from './report.mjs';
+import { buildEmail } from './mail.mjs';
 
 export const RULES = Object.freeze({
   total: QUESTIONS.length,
@@ -268,17 +269,35 @@ async function actionFinish(store, body, now, deps, origin) {
   }
 
   const review = buildReview(s);
-  if (!s.reportSent) {
-    const outcome = await submitReport(s, review, deps, origin);
-    s.reportSent = outcome.ok;
-    s.reportError = outcome.ok ? null : outcome.code;
+  const mailEnabled = typeof deps.sendMail === 'function';
+  if (s.formsSent === undefined) s.formsSent = Boolean(s.reportSent);
+
+  // Each channel is retried independently: a retry never re-sends what already went through.
+  if (!s.formsSent || (mailEnabled && !s.mailSent)) {
+    let forms = { ok: s.formsSent };
+    let mail = { ok: !mailEnabled || Boolean(s.mailSent) };
+    try {
+      const ctx = await prepareReport(s, review, deps, origin);
+      [forms, mail] = await Promise.all([
+        forms.ok ? forms : submitForms(s, ctx, deps, origin),
+        mail.ok ? mail : sendReportMail(s, review, ctx, deps)
+      ]);
+    } catch (err) {
+      console.error('Report preparation failed', err);
+      forms = forms.ok ? forms : { ok: false, code: 'report_internal' };
+    }
+    s.formsSent = forms.ok;
+    s.mailSent = mail.ok;
+    s.reportError = !forms.ok ? forms.code : !mail.ok ? mail.code : null;
     await store.set(s.sid, s);
   }
+
+  const reportSent = s.formsSent && (!mailEnabled || s.mailSent);
   return {
     result: s.result,
     review,
-    reportSent: s.reportSent,
-    ...(s.reportSent ? {} : { reportError: s.reportError || 'forms_unknown' })
+    reportSent,
+    ...(reportSent ? {} : { reportError: s.reportError || 'report_unknown' })
   };
 }
 
@@ -304,15 +323,56 @@ async function postForm(deps, url, body, headers) {
   }
 }
 
+// Everything both channels need. Reports for the HSE team are always in French.
+async function prepareReport(s, review, deps, origin) {
+  const r = s.result;
+  const date = formatDate(r.finishedAt, 'fr');
+  const duration = formatDuration(r.durationMs);
+  const logos = await deps.loadLogos(origin);
+  const html = buildReport({ visitor: s.visitor, result: r, review, lang: 'fr', logos, date, duration });
+  const safeName = s.visitor.name.replace(/[^\p{L}\p{N}]+/gu, '_').slice(0, 40) || 'visiteur';
+  return { date, duration, logos, html, filename: `Rapport_Securite_LNG_${safeName}.html` };
+}
+
+function dataUriToBuffer(dataUri) {
+  const match = /^data:image\/png;base64,([A-Za-z0-9+/=]+)$/.exec(dataUri || '');
+  return match ? Buffer.from(match[1], 'base64') : null;
+}
+
+async function sendReportMail(s, review, ctx, deps) {
+  try {
+    const mana = dataUriToBuffer(ctx.logos?.mana);
+    const managem = dataUriToBuffer(ctx.logos?.managem);
+    const hasLogos = Boolean(mana && managem);
+    const { subject, html, text } = buildEmail({
+      visitor: s.visitor,
+      result: s.result,
+      review,
+      date: ctx.date,
+      duration: ctx.duration,
+      hasLogos
+    });
+    const attachments = [{ filename: ctx.filename, content: ctx.html, contentType: 'text/html; charset=utf-8' }];
+    if (hasLogos) {
+      attachments.push(
+        { filename: 'managem.png', content: managem, contentType: 'image/png', cid: 'managem-logo' },
+        { filename: 'mana.png', content: mana, contentType: 'image/png', cid: 'mana-logo' }
+      );
+    }
+    await deps.sendMail({ subject, html, text, attachments });
+    return { ok: true };
+  } catch (err) {
+    console.error('E-mail report failed:', err?.code || err?.name, err?.message);
+    return { ok: false, code: 'mail_error' };
+  }
+}
+
 // Sends the result to Netlify Forms: first with the HTML report attached, then,
 // if that fails, the plain fields only so the result is never lost.
-async function submitReport(s, review, deps, origin) {
+async function submitForms(s, ctx, deps, origin) {
   try {
     const r = s.result;
-    const date = formatDate(r.finishedAt, s.lang);
-    const duration = formatDuration(r.durationMs);
-    const logos = await deps.loadLogos(origin);
-    const html = buildReport({ visitor: s.visitor, result: r, review, lang: s.lang, logos, date, duration });
+    const { date, duration, html } = ctx;
 
     const fields = {
       'form-name': 'quiz-report',
@@ -323,16 +383,14 @@ async function submitReport(s, review, deps, origin) {
       percentage: `${r.percentage}%`,
       resultat: r.passed ? 'SUCCESS' : 'FAILED',
       date,
-      duration,
-      langue: s.lang.toUpperCase()
+      duration
     };
     const safeFields = Object.entries(fields).map(([k, v]) => [k, csvSafe(String(v))]);
     const url = `${origin}/`;
 
     const form = new FormData();
     for (const [k, v] of safeFields) form.append(k, v);
-    const safeName = s.visitor.name.replace(/[^\p{L}\p{N}]+/gu, '_').slice(0, 40) || 'visiteur';
-    form.append('report', new Blob([html], { type: 'text/html' }), `Rapport_Securite_LNG_${safeName}.html`);
+    form.append('report', new Blob([html], { type: 'text/html' }), ctx.filename);
 
     const withReport = await postForm(deps, url, form);
     if (withReport.ok) return withReport;

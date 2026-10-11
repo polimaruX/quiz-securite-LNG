@@ -2,7 +2,29 @@
 // Quiz sessions are kept server-side in Netlify Blobs (no setup required).
 
 import { getStore } from '@netlify/blobs';
+import nodemailer from 'nodemailer';
 import { createHandler } from './core.mjs';
+
+// Optional e-mail report over SMTP. Enabled only when SMTP_HOST, SMTP_USER,
+// SMTP_PASS and MAIL_TO are set in Netlify (Site configuration → Environment variables).
+function createMailer() {
+  const env = process.env;
+  if (!env.SMTP_HOST || !env.SMTP_USER || !env.SMTP_PASS || !env.MAIL_TO) return undefined;
+  const port = Number(env.SMTP_PORT || 587);
+  const transport = nodemailer.createTransport({
+    host: env.SMTP_HOST,
+    port,
+    secure: port === 465,
+    requireTLS: port !== 465,
+    auth: { user: env.SMTP_USER, pass: env.SMTP_PASS },
+    connectionTimeout: 4_000,
+    greetingTimeout: 4_000,
+    socketTimeout: 6_000
+  });
+  const from = env.MAIL_FROM || { name: 'Induction Sécurité mLNG Tendrara', address: env.SMTP_USER };
+  const to = env.MAIL_TO.split(/[;,]/).map((a) => a.trim()).filter(Boolean);
+  return (message) => transport.sendMail({ from, to, ...message });
+}
 
 const logoCache = new Map();
 
@@ -28,6 +50,7 @@ export default createHandler({
     };
   },
   fetch: (...args) => fetch(...args),
+  sendMail: createMailer(),
   async loadLogos(origin) {
     const [mana, managem] = await Promise.all([loadLogo(origin, 'mana.png'), loadLogo(origin, 'managem.png')]);
     return { mana, managem };
