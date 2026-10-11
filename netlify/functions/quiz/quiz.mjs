@@ -9,7 +9,7 @@ const logoCache = new Map();
 async function loadLogo(origin, file) {
   if (logoCache.has(file)) return logoCache.get(file);
   try {
-    const res = await fetch(`${origin}/${file}`, { signal: AbortSignal.timeout(5_000) });
+    const res = await fetch(`${origin}/${file}`, { signal: AbortSignal.timeout(2_500) });
     if (!res.ok || !(res.headers.get('content-type') || '').startsWith('image/png')) return '';
     const dataUri = `data:image/png;base64,${Buffer.from(await res.arrayBuffer()).toString('base64')}`;
     logoCache.set(file, dataUri);

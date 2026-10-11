@@ -58,6 +58,8 @@
                 fail: 'Induction à refaire',
                 sent: 'Résultat transmis au service HSE.',
                 notSent: "Le résultat n'a pas pu être transmis. Merci de prévenir l'accueil.",
+                errorCode: 'Code : {code}',
+                resend: "Réessayer l'envoi",
                 review: 'Voir la correction',
                 yourAnswer: 'Votre réponse :',
                 correctAnswer: 'Bonne réponse :',
@@ -127,6 +129,8 @@
                 fail: 'Induction must be repeated',
                 sent: 'Result sent to the HSE department.',
                 notSent: 'The result could not be sent. Please inform the reception desk.',
+                errorCode: 'Code: {code}',
+                resend: 'Retry sending',
                 review: 'See the correction',
                 yourAnswer: 'Your answer:',
                 correctAnswer: 'Correct answer:',
@@ -233,6 +237,7 @@
         timeoutCount: $('timeoutCount'),
         duration: $('durationDisplay'),
         sendStatus: $('sendStatus'),
+        resendBtn: $('resendBtn'),
         reviewDetails: $('reviewDetails'),
         reviewList: $('reviewList'),
         restartBtn: $('restartBtn')
@@ -665,8 +670,11 @@
         el.incorrectCount.textContent = String(count('incorrect'));
         el.timeoutCount.textContent = String(count('timeout'));
         el.duration.textContent = formatClock(result.durationMs);
-        el.sendStatus.textContent = t(reportSent ? 'results.sent' : 'results.notSent');
+        el.sendStatus.textContent = reportSent
+            ? t('results.sent')
+            : `${t('results.notSent')} ${t('results.errorCode', { code: outcome.reportError || 'forms_unknown' })}`;
         el.sendStatus.className = `send-status ${reportSent ? 'ok' : 'ko'}`;
+        el.resendBtn.hidden = reportSent;
 
         const chipKey = { correct: 'results.chipCorrect', incorrect: 'results.chipIncorrect', timeout: 'results.chipTimeout' };
         el.reviewList.replaceChildren(
@@ -702,6 +710,22 @@
                 return li;
             })
         );
+    }
+
+    // finish is idempotent on the server: calling it again only retries the Netlify Forms submission.
+    async function resend() {
+        if (state.busy || !state.sid) return;
+        setBusy(true);
+        el.resendBtn.disabled = true;
+        try {
+            state.outcome = await api({ action: 'finish', sid: state.sid, lang: state.lang });
+            renderResults();
+        } catch (err) {
+            showError(err, resend);
+        } finally {
+            el.resendBtn.disabled = false;
+            setBusy(false);
+        }
     }
 
     function restart() {
@@ -769,6 +793,7 @@
 
     el.nextBtn.addEventListener('click', goNext);
     el.restartBtn.addEventListener('click', restart);
+    el.resendBtn.addEventListener('click', resend);
 
     window.addEventListener('beforeunload', (event) => {
         if (state.view === 'quiz') {

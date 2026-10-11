@@ -269,14 +269,43 @@ async function actionFinish(store, body, now, deps, origin) {
 
   const review = buildReview(s);
   if (!s.reportSent) {
-    s.reportSent = await submitReport(s, review, deps, origin);
+    const outcome = await submitReport(s, review, deps, origin);
+    s.reportSent = outcome.ok;
+    s.reportError = outcome.ok ? null : outcome.code;
     await store.set(s.sid, s);
   }
-  return { result: s.result, review, reportSent: s.reportSent };
+  return {
+    result: s.result,
+    review,
+    reportSent: s.reportSent,
+    ...(s.reportSent ? {} : { reportError: s.reportError || 'forms_unknown' })
+  };
 }
 
 // ---------- Netlify Forms submission ----------
 
+const FORMS_TIMEOUT_MS = 4_000;
+
+async function postForm(deps, url, body, headers) {
+  try {
+    const res = await deps.fetch(url, { method: 'POST', body, headers, signal: AbortSignal.timeout(FORMS_TIMEOUT_MS) });
+    if (res.ok) return { ok: true };
+    let snippet = '';
+    try {
+      snippet = (await res.text()).replace(/\s+/g, ' ').slice(0, 200);
+    } catch {
+      /* body unavailable */
+    }
+    console.error(`Netlify Forms rejected the submission: HTTP ${res.status} from ${url} — ${snippet}`);
+    return { ok: false, code: `forms_${res.status}` };
+  } catch (err) {
+    console.error(`Netlify Forms submission to ${url} failed:`, err?.name, err?.message);
+    return { ok: false, code: err?.name === 'TimeoutError' ? 'forms_timeout' : 'forms_network' };
+  }
+}
+
+// Sends the result to Netlify Forms: first with the HTML report attached, then,
+// if that fails, the plain fields only so the result is never lost.
 async function submitReport(s, review, deps, origin) {
   try {
     const r = s.result;
@@ -298,17 +327,25 @@ async function submitReport(s, review, deps, origin) {
       langue: s.lang.toUpperCase(),
       attempt_id: s.sid
     };
+    const safeFields = Object.entries(fields).map(([k, v]) => [k, csvSafe(String(v))]);
+    const url = `${origin}/`;
+
     const form = new FormData();
-    for (const [k, v] of Object.entries(fields)) form.append(k, csvSafe(String(v)));
+    for (const [k, v] of safeFields) form.append(k, v);
     const safeName = s.visitor.name.replace(/[^\p{L}\p{N}]+/gu, '_').slice(0, 40) || 'visiteur';
     form.append('report', new Blob([html], { type: 'text/html' }), `Rapport_Securite_LNG_${safeName}.html`);
 
-    const res = await deps.fetch(`${origin}/`, { method: 'POST', body: form, signal: AbortSignal.timeout(10_000) });
-    if (!res.ok) console.error('Netlify Forms submission failed', res.status);
-    return res.ok;
+    const withReport = await postForm(deps, url, form);
+    if (withReport.ok) return withReport;
+
+    const plain = await postForm(deps, url, new URLSearchParams(safeFields).toString(), {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    });
+    if (plain.ok) console.warn('Result sent without the HTML report attachment');
+    return plain.ok ? plain : withReport;
   } catch (err) {
     console.error('Netlify Forms submission error', err);
-    return false;
+    return { ok: false, code: 'forms_internal' };
   }
 }
 

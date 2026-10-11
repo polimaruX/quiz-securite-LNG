@@ -644,6 +644,10 @@ input[aria-invalid="true"] {
     margin-bottom: 1rem;
 }
 
+.resend-btn {
+    margin-bottom: 1rem;
+}
+
 .send-status.ok {
     color: var(--ok-text);
 }

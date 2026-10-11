@@ -52,6 +52,18 @@ Déroulement : `start` → (`answer` → `next`) × 10 → `finish`. Le serveur 
 
 Netlify Blobs ne demande aucune configuration. Aucune variable d'environnement n'est nécessaire.
 
+## Dépannage : « Le résultat n'a pas pu être transmis »
+
+Le résultat du quiz est toujours enregistré côté serveur. Seul l'envoi vers Netlify Forms a échoué. Le message affiche un code, et le bouton **Réessayer l'envoi** relance l'envoi sans refaire le quiz.
+
+| Code | Cause probable | Solution |
+|---|---|---|
+| `forms_404` ou `forms_405` | Le formulaire `quiz-report` n'est pas détecté par Netlify | **Forms → Enable form detection**, puis **Deploys → Trigger deploy → Clear cache and deploy site**. Vérifier que `quiz-report` apparaît dans l'onglet **Forms**. |
+| `forms_timeout` / `forms_network` | Netlify n'a pas répondu à temps | Cliquer sur **Réessayer l'envoi**. |
+| autre `forms_xxx` | Refus de Netlify Forms | Consulter **Logs → Functions → quiz** : la réponse exacte de Netlify y est enregistrée. |
+
+Si la pièce jointe est refusée, les champs (nom, score, résultat…) sont envoyés seuls, pour que le résultat ne soit jamais perdu.
+
 ## Modifier les questions
 
 Éditer `netlify/functions/quiz/questions.mjs`. Chaque question contient le texte et les 4 options en `fr` et en `en`, dans le même ordre. `answer` est l'index (0 à 3) de la bonne réponse. Le seuil et les délais se règlent dans `RULES`, dans `core.mjs`. Il faut alors mettre à jour les textes des règles dans `public/assets/app.js`.
