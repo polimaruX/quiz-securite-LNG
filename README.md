@@ -43,6 +43,10 @@ Déroulement : `start` → (`answer` → `next`) × 10 → `finish`. Le serveur 
 
 ## Déploiement sur Netlify
 
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/polimaruX/quiz-securite-LNG)
+
+Le bouton crée une copie du dépôt sur votre compte GitHub et un site Netlify relié à cette copie. Sinon, suivez les étapes ci-dessous.
+
 1. Netlify → **Add new site → Import an existing project → GitHub**, puis choisir ce dépôt.
 2. Garder les réglages proposés (ils viennent de `netlify.toml`) : aucune commande de build, dossier publié `public`.
 3. Après le premier déploiement : **Site configuration → Forms → Enable form detection**, puis **redéployer** (Deploys → Trigger deploy) pour que le formulaire `quiz-report` soit détecté.
