@@ -1,0 +1,10 @@
+{
+  "name": "quiz-securite-lng",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Quiz sécurité visiteur — Induction mLNG Tendrara (ManaEnergy / Managem)",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^10.7.13"
+  }
+}

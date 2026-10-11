@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Quiz Sécurité mLNG Tendrara</title>
+    <link rel="icon" type="image/png" href="mana.png">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="assets/app.js" defer></script>
+</head>
+
+<body>
+    <noscript>
+        <p class="noscript">JavaScript est requis pour passer le quiz. / JavaScript is required to take the quiz.</p>
+    </noscript>
+
+    <main class="container">
+        <div class="card">
+            <header class="header">
+                <div class="logos">
+                    <div class="logo">
+                        <img src="mana.png" alt="" class="logo-img" width="38" height="28">
+                        <span class="logo-text">ManaEnergy</span>
+                    </div>
+                    <div class="logo">
+                        <img src="managem.png" alt="" class="logo-img logo-managem" width="42" height="42">
+                        <span class="logo-text">Managem</span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button type="button" class="btn btn-sm" id="langToggle" data-i18n-title="ui.langTitle"
+                        title="Changer la langue">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9" />
+                            <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+                        </svg>
+                        <span id="langLabel">FR</span>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-icon" id="themeToggle" data-i18n-title="ui.themeTitle"
+                        title="Changer le thème" aria-label="Changer le thème">
+                        <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="4" />
+                            <path
+                                d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+                        </svg>
+                        <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <div class="error-box" id="errorBox" role="alert" hidden>
+                <p id="errorText"></p>
+                <button type="button" class="btn btn-sm" id="errorAction"></button>
+            </div>
+
+            <!-- ========== REGISTRATION ========== -->
+            <section id="view-registration" aria-labelledby="regTitle">
+                <h1 id="regTitle" class="title" data-i18n="registration.title">QUIZ DE SÉCURITÉ VISITEUR</h1>
+                <p class="subtitle" data-i18n="registration.subtitle">Veuillez remplir vos informations avant de
+                    commencer le quiz de sécurité.</p>
+
+                <div class="welcome-box">
+                    <p class="welcome-title" data-i18n="registration.welcomeTitle">Bienvenue !</p>
+                    <p class="welcome-text">
+                        <span data-i18n="registration.welcomeText1"></span><br>
+                        <span data-i18n="registration.welcomeText2"></span><br>
+                        <strong data-i18n="registration.welcomeGoodQuiz"></strong>
+                    </p>
+                    <ul class="rules">
+                        <li><span class="rule-dot" aria-hidden="true">1</span><span data-i18n="registration.rule1"></span></li>
+                        <li><span class="rule-dot" aria-hidden="true">2</span><span data-i18n="registration.rule2"></span></li>
+                        <li><span class="rule-dot" aria-hidden="true">3</span><span data-i18n="registration.rule3"></span></li>
+                        <li><span class="rule-dot" aria-hidden="true">4</span><span data-i18n="registration.rule4"></span></li>
+                    </ul>
+                </div>
+
+                <form id="regForm" novalidate autocomplete="off">
+                    <div class="form-group">
+                        <label for="visitorName" data-i18n="registration.name">Nom complet</label>
+                        <input type="text" id="visitorName" name="name" maxlength="100" required
+                            aria-describedby="err-name" data-i18n-placeholder="registration.namePlaceholder">
+                        <p class="field-error" id="err-name" hidden></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorPosition" data-i18n="registration.position">Poste / Fonction</label>
+                        <input type="text" id="visitorPosition" name="position" maxlength="100" required
+                            aria-describedby="err-position" data-i18n-placeholder="registration.positionPlaceholder">
+                        <p class="field-error" id="err-position" hidden></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorOrg" data-i18n="registration.org">Organisation</label>
+                        <input type="text" id="visitorOrg" name="org" maxlength="100" required
+                            aria-describedby="err-org" data-i18n-placeholder="registration.orgPlaceholder">
+                        <p class="field-error" id="err-org" hidden></p>
+                    </div>
+                    <p class="privacy" data-i18n="registration.privacy"></p>
+                    <button type="submit" class="btn btn-primary btn-block" id="startQuizBtn">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M7 4l13 8-13 8z" class="fill" />
+                        </svg>
+                        <span data-i18n="registration.start">Commencer le quiz</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- ========== QUIZ ========== -->
+            <section id="view-quiz" hidden aria-labelledby="questionText">
+                <div class="quiz-top">
+                    <span class="pill" id="quizProgressText"></span>
+                    <span class="pill pill-timer" id="totalTimer" role="timer" aria-live="off">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="13" r="8" />
+                            <path d="M12 9v4l2.5 2.5M9 2h6" />
+                        </svg>
+                        <span class="sr-only" data-i18n="quiz.totalTime"></span>
+                        <span id="totalTimerValue">5:00</span>
+                    </span>
+                </div>
+
+                <div class="progress" aria-hidden="true">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="qtimer" id="questionTimer">
+                    <div class="qtimer-track" aria-hidden="true">
+                        <div class="qtimer-bar" id="questionTimerBar"></div>
+                    </div>
+                    <span class="qtimer-value" role="timer" aria-live="off">
+                        <span class="sr-only" data-i18n="quiz.questionTime"></span>
+                        <span id="questionTimerValue">30</span> s
+                    </span>
+                </div>
+
+                <p class="notice" id="notice" aria-live="polite" hidden></p>
+
+                <h2 class="question-text" id="questionText" tabindex="-1"></h2>
+                <div class="options" id="optionsContainer" role="group" aria-labelledby="questionText"></div>
+
+                <div class="feedback" id="feedbackMessage" aria-live="polite" hidden>
+                    <p class="feedback-title" id="feedbackTitle"></p>
+                    <p class="feedback-explanation" id="feedbackExplanation" hidden></p>
+                </div>
+
+                <button type="button" class="btn btn-primary btn-block" id="nextBtn" hidden>
+                    <span id="nextBtnLabel"></span>
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                </button>
+            </section>
+
+            <!-- ========== RESULTS ========== -->
+            <section id="view-results" class="results" hidden aria-labelledby="resultsTitle">
+                <svg class="results-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5z" />
+                    <path d="M8.5 12l2.5 2.5 4.5-5" />
+                </svg>
+                <h1 id="resultsTitle" class="title" data-i18n="results.title">Résultat du quiz</h1>
+                <div id="resultBadge" class="result-badge"></div>
+
+                <dl class="stats">
+                    <div><dt data-i18n="results.score">Score</dt><dd id="scoreDisplay"></dd></div>
+                    <div><dt data-i18n="results.percentage">Pourcentage</dt><dd id="percentageDisplay"></dd></div>
+                    <div><dt data-i18n="results.correct">Correctes</dt><dd id="correctCount"></dd></div>
+                    <div><dt data-i18n="results.incorrect">Incorrectes</dt><dd id="incorrectCount"></dd></div>
+                    <div><dt data-i18n="results.timeout">Temps écoulé</dt><dd id="timeoutCount"></dd></div>
+                    <div><dt data-i18n="results.duration">Durée</dt><dd id="durationDisplay"></dd></div>
+                </dl>
+
+                <p class="send-status" id="sendStatus" role="status"></p>
+
+                <details class="review" id="reviewDetails">
+                    <summary data-i18n="results.review">Voir la correction</summary>
+                    <ol class="review-list" id="reviewList"></ol>
+                </details>
+
+                <button type="button" class="btn btn-primary btn-block" id="restartBtn">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5" />
+                    </svg>
+                    <span data-i18n="results.restart">Nouvelle inscription</span>
+                </button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Netlify Forms build-time detection only. Submissions are sent by the server
+         function (netlify/functions/quiz), never by the browser. -->
+    <form name="quiz-report" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" hidden>
+        <input name="bot-field">
+        <input name="fullname">
+        <input name="function">
+        <input name="organization">
+        <input name="score">
+        <input name="percentage">
+        <input name="resultat">
+        <input name="date">
+        <input name="duration">
+        <input name="langue">
+        <input name="attempt_id">
+        <input type="file" name="report">
+    </form>
+</body>
+
+</html>
