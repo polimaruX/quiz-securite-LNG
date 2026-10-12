@@ -77,11 +77,11 @@ export function buildReport({ visitor, result, review, lang, logos, date, durati
             ? `<span class="b to">${e(L.timeout)}</span>`
             : `<span class="b ko">${e(L.incorrect)}</span>`;
       return `<tr${item.status === 'correct' ? '' : ' class="miss"'}>
-<td class="c">Q${item.n}</td>
-<td>${e(v.question)}</td>
-<td>${v.chosen === null ? e(L.noAnswer) : e(v.chosen)}</td>
-<td class="good">${item.status === 'correct' ? '' : e(v.correct)}</td>
-<td class="c">${badge}</td>
+<td class="c n">Q${item.n}</td>
+<td class="q">${e(v.question)}</td>
+<td data-label="${e(L.colChosen)}">${v.chosen === null ? e(L.noAnswer) : e(v.chosen)}</td>
+<td class="good" data-label="${e(L.colCorrect)}">${item.status === 'correct' ? '' : e(v.correct)}</td>
+<td class="c st">${badge}</td>
 </tr>`;
     })
     .join('');
@@ -118,7 +118,27 @@ tr.miss{background:#fffbeb}
 .c{text-align:center}.good{color:#047857;font-weight:600}
 .b{display:inline-block;padding:3px 8px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
 .ok{background:#d1fae5;color:#047857}.ko{background:#fee2e2;color:#b91c1c}.to{background:#fef3c7;color:#92400e}
-@media(max-width:700px){.meta{text-align:left}.info div{min-width:100%}}
+@media(max-width:700px){.meta{text-align:left}}
+@media(max-width:640px){
+body{padding:0;background:#fff}
+.hd{border-radius:0;padding:14px 16px;flex-direction:column;align-items:flex-start}
+.meta b{font-size:15px}
+.card{border-radius:0;box-shadow:none;padding:16px}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.info div{min-width:0;padding:8px 10px}
+.info div:first-child{grid-column:1/-1}
+.info strong{font-size:14px}
+thead{display:none}
+table,tbody,tr,td{display:block;width:100%}
+tr{position:relative;border:1px solid #e5e9f0;border-radius:10px;padding:10px 12px;margin-bottom:10px;background:#fff}
+td{border:0;padding:3px 0;font-size:13px;text-align:left}
+td.c{text-align:left}
+td.n{font-size:11px;font-weight:700;color:#64748b;padding-right:110px}
+td.st{position:absolute;top:9px;right:12px;width:auto;padding:0}
+td.q{font-weight:600;margin:2px 0 4px}
+td[data-label]::before{content:attr(data-label) " : ";color:#64748b;font-weight:600}
+td:empty{display:none}
+}
 </style>
 </head>
 <body>
