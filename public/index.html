@@ -166,6 +166,11 @@
         </div>
     </main>
 
+    <!-- Netlify injects a "Powered by Netlify" badge script that builds an iframe with
+         inline code, which the site's CSP blocks (console errors). The script exits
+         early when this element already exists, so the badge is never created. -->
+    <div id="nl-badge-frame" hidden></div>
+
     <!-- Netlify Forms build-time detection only. Submissions are sent by the server
          function (netlify/functions/quiz), never by the browser. -->
     <form name="quiz-report" data-netlify="true" netlify-honeypot="bot-field" enctype="multipart/form-data" hidden>
